@@ -22,10 +22,10 @@ for dir in */; do
         fi
         echo "$dir$BENCH"
 		
-		for i in {1..100}
+		for i in {1..1}
 		do
 		    START_TIME=$(date +%s%N | cut -b1-13)
-			$COMPILER $OPTIONS *.c -O0
+			$COMPILER $OPTIONS *.c -O2
 			ELAPSED_TIME=$(($(date +%s%N | cut -b1-13) - $START_TIME))
 			
 			echo "$ELAPSED_TIME"
