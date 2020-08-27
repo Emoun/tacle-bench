@@ -1,13 +1,13 @@
 #!/bin/bash
 
-COMPILER=gcc # Please adapt this line to your favorite compiler.
-#COMPILER=patmos-clang
+#COMPILER=gcc # Please adapt this line to your favorite compiler.
+COMPILER=patmos-clang
 
-OPTIONS=" -Wall -Wno-unknown-pragmas -Werror "
+OPTIONS="-O2 -mpatmos-singlepath=main"
 
-EXEC= # Adapt if the executable is to be executed via another program
+#EXEC= # Adapt if the executable is to be executed via another program
 #EXEC=valgrind\ -q
-#EXEC=pasim
+EXEC=pasim
 
 PASS=0
 FAIL_COMP=0
@@ -33,7 +33,7 @@ for dir in */; do
         
         
         # Please remove '&>/dev/null' to identify the warnings (if any)
-        $COMPILER $OPTIONS *.c  &>/dev/null
+        $COMPILER $OPTIONS *.c  #&>/dev/null
         
         if [ -f a.out ]; then
             $EXEC ./a.out &>/dev/null
