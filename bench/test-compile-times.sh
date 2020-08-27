@@ -2,7 +2,7 @@
 
 COMPILER=patmos-clang
 
-OPTIONS=" -Wall -Wno-unknown-pragmas -Werror -mpatmos-singlepath=main "
+OPTIONS=" -Wall -Wno-unknown-pragmas -Werror -mpatmos-singlepath=main -Xllc -stats"
 
 echo "Testing compile times (in milliseconds):"
 
@@ -25,7 +25,7 @@ for dir in */; do
 		for i in {1..1}
 		do
 		    START_TIME=$(date +%s%N | cut -b1-13)
-			$COMPILER $OPTIONS *.c -O2
+			$COMPILER $OPTIONS *.c -O2 &> a.stats
 			ELAPSED_TIME=$(($(date +%s%N | cut -b1-13) - $START_TIME))
 			
 			echo "$ELAPSED_TIME"
