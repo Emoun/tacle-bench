@@ -52,6 +52,10 @@ for dir in */; do
             if [ $RETURNVALUE1 -eq $RETURNVALUE2 ]; then
                 printf "passed. \n"
                 ((PASS++))
+				A_BENCH=$(grep "Cycles:" a_bench.txt)
+				A_BUNDLED_BENCH=$(grep "Cycles:" a_bundled_bench.txt)
+				echo "a.out:          $A_BENCH"
+				echo "a_bundled.out:  $A_BUNDLED_BENCH"
             else
                 printf "failed (wrong return value $RETURNVALUE1 != $RETURNVALUE2). \n"
                 ((FAIL_EXEC++))

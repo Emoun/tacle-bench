@@ -15,7 +15,7 @@ for dir in */; do
         echo "$dir$BENCH"
 		
 		
-		grep "bundle" a.stats
+		grep "bundle" a_bundled.stats
 		
         cd ..
     done
