@@ -3,7 +3,7 @@
 #COMPILER=gcc # Please adapt this line to your favorite compiler.
 COMPILER=patmos-clang
 
-OPTIONS=" -O2 -Wall -Wno-unknown-pragmas -Werror -mpatmos-singlepath=main -Xllc -stats"
+OPTIONS=" -O2 -mpatmos-singlepath=main -Xllc -stats"
 OPTIONS_BUNDLING="$OPTIONS -Xllc -mpatmos-disable-vliw=false"
 
 #EXEC= # Adapt if the executable is to be executed via another program
