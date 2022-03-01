@@ -50,7 +50,7 @@ void bitcount_init3( void )
     3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
     4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
   };
-
+  _Pragma( "loopbound min 256 max 256" )
   for ( i = 0; i < 256; i++ )
     bitcount_bits[ i ] = bitcount_bits_tmp[ i ];
 }

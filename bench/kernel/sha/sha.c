@@ -121,6 +121,7 @@ void sha_init( void )
   sha_info.digest[ 4 ] = 0xc3d2e1f0L;
   sha_info.count_lo = 0L;
   sha_info.count_hi = 0L;
+  _Pragma( "loopbound min 16 max 16" )
   for ( i = 0; i < 16; i++ )
     sha_info.data[ i ] = 0;
 }
