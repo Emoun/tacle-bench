@@ -2,9 +2,18 @@
 
 #COMPILER=gcc # Please adapt this line to your favorite compiler.
 COMPILER=patmos-clang
-POSTFIX=""
 
-OPTIONS="-O2"
+#POSTFIX=""
+#OPTIONS="-O2"
+
+#POSTFIX="-sp"
+#OPTIONS="-O2 -mllvm --mpatmos-singlepath=main"
+
+#POSTFIX="-cet-instr"
+#OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet=instruction"
+
+POSTFIX="-cet-counter"
+OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet=counter"
 
 #EXEC= # Adapt if the executable is to be executed via another program
 #EXEC=valgrind\ -q
@@ -39,7 +48,7 @@ for dir in */; do
 				printf "\n"
 				((IGNORE++))
 			else
-				for I in {1..10} ; do
+				for I in {1..1} ; do
 					if [ -f "a$POSTFIX.out" ]; then
 						rm "a$POSTFIX.out"
 					fi
@@ -49,7 +58,7 @@ for dir in */; do
 					fi
 					
 					# Please remove '&>/dev/null' to identify the warnings (if any)
-					$COMPILER $OPTIONS *.c  #&>/dev/null
+					$COMPILER $OPTIONS *.c -o "a$POSTFIX.out" #&>/dev/null
 					
 					if [ -f "a$POSTFIX.out" ]; then
 						$EXEC "./a$POSTFIX.out" #&>/dev/null
@@ -59,7 +68,7 @@ for dir in */; do
 						fi						
 					fi 
 				done
-				if [ -f a$POSTFIX.out ]; then
+				if [ -f "a$POSTFIX.out" ]; then
 					if [ $RETURNVALUE -eq 0 ]; then
 						printf "passed. \n"
 						((PASS++))

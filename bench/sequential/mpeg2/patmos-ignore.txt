@@ -1,1 +1,1 @@
-timeout
+timeout (120s, singlepath)
