@@ -1,22 +1,39 @@
 #!/bin/bash
 
-#COMPILER=gcc # Please adapt this line to your favorite compiler.
+if [ -z "$1" ]; then
+	echo "Please choose"
+	exit 1
+else
+	CHOICE=$1
+fi
+
+if [ $CHOICE -eq 0 ]; then
+	echo "Checking Traditional"
+	POSTFIX=""
+	OPTIONS="-O2 -mserialize=a.pml"
+fi
+if [ $CHOICE -eq 1 ]; then
+	echo "Checking Single-path"
+	POSTFIX="-sp"
+	OPTIONS="-O2 -mllvm --mpatmos-singlepath=main"
+fi
+if [ $CHOICE -eq 2 ]; then
+	echo "Checking CET Opposite"
+	POSTFIX="-cet-opposite"
+	OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet=opposite"
+fi
+if [ $CHOICE -eq 3 ]; then
+	echo "Checking CET Counter"
+	POSTFIX="-cet-counter"
+	OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet=counter"
+fi
+if [ $CHOICE -eq 4 ]; then
+	echo "Checking CET hybrid"
+	POSTFIX="-cet-hybrid"
+	OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet"
+fi
+
 COMPILER=patmos-clang
-
-#POSTFIX=""
-#OPTIONS="-O2"
-
-#POSTFIX="-sp"
-#OPTIONS="-O2 -mllvm --mpatmos-singlepath=main"
-
-#POSTFIX="-cet-instr"
-#OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet=instruction"
-
-POSTFIX="-cet-counter"
-OPTIONS="-O2 -mllvm --mpatmos-singlepath=main -mllvm --mpatmos-enable-cet=counter"
-
-#EXEC= # Adapt if the executable is to be executed via another program
-#EXEC=valgrind\ -q
 EXEC=pasim
 
 PASS=0
@@ -51,22 +68,36 @@ for dir in */; do
 				for I in {1..1} ; do
 					if [ -f "a$POSTFIX.out" ]; then
 						rm "a$POSTFIX.out"
+						rm -f "a$POSTFIX.stats"
+						rm -f "a$POSTFIX.pml"
+						rm -f "a$POSTFIX.wcet"
 					fi
 					
 					if [ -f *.o ]; then
 						rm *.o
 					fi
 					
+					if [ -z "$POSTFIX" ]; then
+						SP_ADD_OPTIONS=""
+					else
+						SP_ADD_OPTIONS="-mllvm --stats -mllvm --info-output-file=a$POSTFIX.stats"
+					fi
+					
+					#set -x
 					# Please remove '&>/dev/null' to identify the warnings (if any)
-					$COMPILER $OPTIONS *.c -o "a$POSTFIX.out" #&>/dev/null
+					$COMPILER $OPTIONS *.c -o "a$POSTFIX.out" $SP_ADD_OPTIONS #&>/dev/null
 					
 					if [ -f "a$POSTFIX.out" ]; then
 						$EXEC "./a$POSTFIX.out" #&>/dev/null
 						RETURNVALUE=$(echo $?)
-						if [ $RETURNVALUE -eq 0 ]; then
+						if [ $RETURNVALUE -eq 0 ]; then 
+							if [ -z "$POSTFIX" ]; then
+								platin wcet -i a.pml -b a.out -e main --report > a.wcet 2>&1
+							fi
 							break
 						fi						
-					fi 
+					fi
+					#set +x
 				done
 				if [ -f "a$POSTFIX.out" ]; then
 					if [ $RETURNVALUE -eq 0 ]; then
