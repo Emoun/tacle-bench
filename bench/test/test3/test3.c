@@ -153,7 +153,7 @@ void test3_func_3_0( void );
 void test3_func_2_0( void );
 void test3_func_1_0( void );
 void test3_func_0_0( void );
-void test3_main( void );
+void test3_main( void ) __attribute__((noinline));
 int main( void );
 
 

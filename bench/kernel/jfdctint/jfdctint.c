@@ -100,7 +100,7 @@
 
 void jfdctint_init();
 int jfdctint_return();
-void jfdctint_main();
+void jfdctint_main() __attribute__((noinline));
 int main( void );
 
 

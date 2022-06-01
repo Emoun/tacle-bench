@@ -38,7 +38,7 @@ void countnegative_initialize( matrix );
 void countnegative_init( void );
 int countnegative_return( void );
 void countnegative_sum( matrix );
-void countnegative_main( void );
+void countnegative_main( void ) __attribute__((noinline));
 int main( void );
 
 /*

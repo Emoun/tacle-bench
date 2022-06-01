@@ -69,7 +69,7 @@ void cjpeg_wrbmp_write_colormap( cjpeg_wrbmp_j_decompress_ptr
                                  int cMap );
 int cjpeg_wrbmp_putc_modified( int character );
 void cjpeg_wrbmp_init();
-void cjpeg_wrbmp_main();
+void cjpeg_wrbmp_main() __attribute__((noinline));
 int cjpeg_wrbmp_return();
 int main();
 
