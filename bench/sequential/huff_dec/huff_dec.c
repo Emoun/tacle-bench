@@ -76,7 +76,7 @@ unsigned int huff_dec_read_code_n_bits( unsigned int n );
 void huff_dec_read_header( t_bin_val codes_table[ 257 ] );
 huff_dec_t_tree *huff_dec_tree_encoding( t_bin_val codes_table[ 257 ],
     huff_dec_t_tree heap[ 514 ] );
-void huff_dec_main( void );
+void huff_dec_main( void ) __attribute__((noinline));
 int main( void );
 
 

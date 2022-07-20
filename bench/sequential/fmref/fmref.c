@@ -59,7 +59,7 @@ void fmref_run_demod( FloatBuffer *fbin, FloatBuffer *fbout );
 void fmref_init_equalizer( EqualizerData *data );
 void fmref_run_equalizer( FloatBuffer *fbin, FloatBuffer *fbout,
                           EqualizerData *data );
-void fmref_main( void );
+void fmref_main( void ) __attribute__((noinline));
 
 void fmref_init( void )
 {

@@ -1,0 +1,4 @@
+*.out
+*.stats
+*.pml
+*.wcet

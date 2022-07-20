@@ -55,7 +55,7 @@ size_t sha_fread( void *, size_t, size_t, struct SHA_MY_FILE * );
 void sha_update( struct SHA_INFO *, BYTE *, int );
 void sha_final( struct SHA_INFO * );
 void sha_stream( struct SHA_INFO *, struct SHA_MY_FILE * );
-void sha_main( void );
+void sha_main( void ) __attribute__((noinline));
 int sha_return ( void );
 int main( void );
 

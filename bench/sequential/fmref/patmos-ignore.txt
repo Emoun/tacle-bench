@@ -1,1 +1,1 @@
-Timeout (300 sec, cet-counter)
+Timeout (cet-counter)

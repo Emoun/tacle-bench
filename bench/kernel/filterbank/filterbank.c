@@ -30,7 +30,7 @@
 */
 
 void filterbank_init( void );
-void filterbank_main( void );
+void filterbank_main( void ) __attribute__((noinline));
 int filterbank_return( void );
 void filterbank_core( float r[ 256 ],
                       float y[ 256 ],
