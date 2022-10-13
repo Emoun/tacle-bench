@@ -10,7 +10,7 @@ fi
 if [ $CHOICE -eq 0 ]; then
 	echo "Checking Traditional"
 	POSTFIX=""
-	OPTIONS="-O2 -mserialize=a.pml"
+	OPTIONS="-O2 -mllvm --mpatmos-serialize=a.pml"
 fi
 if [ $CHOICE -eq 1 ]; then
 	echo "Checking Single-path"
@@ -37,11 +37,6 @@ if [ $CHOICE -eq 5 ]; then
 	POSTFIX="-cet-pseudo"
 	OPTIONS="-O2 -mllvm --mpatmos-enable-cet -mllvm --mpatmos-disable-pseudo-roots"
 fi
-if [ $CHOICE -eq 6 ]; then
-	echo "Checking Traditional LLVM12"
-	POSTFIX="-trad-12"
-	OPTIONS="-O2"
-fi
 
 COMPILER=patmos-clang
 EXEC=pasim
@@ -63,7 +58,7 @@ for dir in */; do
 		for BENCH in */; do
 			((IGNORE++))
 		done
-		((IGNORE--)) # Ensure we don't cound patmos-ignore.txt
+		((IGNORE--)) # Ensure we don't count patmos-ignore.txt
 	else
 		for BENCH in */; do
 			cd "$BENCH"
@@ -97,9 +92,6 @@ for dir in */; do
 					if [ -z "$POSTFIX" ]; then
 						SP_FUN_OPT=""
 						SP_ADD_OPTIONS=""
-					elif [ "$POSTFIX" == "-trad-12" ]; then
-						SP_FUN_OPT=""
-						SP_ADD_OPTIONS=""
 					else
 						SP_FUN_OPT="-mllvm --mpatmos-singlepath=$ENTRYFN"
 						SP_ADD_OPTIONS="-mllvm --stats -mllvm --info-output-file=a$POSTFIX.stats"
@@ -110,7 +102,7 @@ for dir in */; do
 					$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX.out" $SP_ADD_OPTIONS #&>/dev/null
 										
 					if [ -f "a$POSTFIX.out" ]; then
-						$EXEC "./a$POSTFIX.out" #&>/dev/null
+						$EXEC "./a$POSTFIX.out" -V 2> "./a$POSTFIX.pasim" #&>/dev/null
 						RETURNVALUE=$(echo $?)
 						if [ $RETURNVALUE -eq 0 ]; then 
 							if [ -z "$POSTFIX" ]; then
@@ -121,6 +113,11 @@ for dir in */; do
 								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-2.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation2
 								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-4.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation4
 								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-8.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation8
+								
+								$EXEC "./a$POSTFIX-1.out" -V 2> "a$POSTFIX-1.pasim"
+								$EXEC "./a$POSTFIX-2.out" -V 2> "a$POSTFIX-2.pasim"
+								$EXEC "./a$POSTFIX-4.out" -V 2> "a$POSTFIX-4.pasim"
+								$EXEC "./a$POSTFIX-8.out" -V 2> "a$POSTFIX-8.pasim"
 							fi
 							break
 						fi						
