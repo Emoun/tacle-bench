@@ -66,8 +66,7 @@ for dir in */; do
 			printf "Checking ${BENCH} ..."
 			
 			if [ -f patmos-ignore.txt ]; then
-				cat patmos-ignore.txt
-				printf "\n"
+				printf "Ignored\n"
 				((IGNORE++))
 			else
 				for I in {1..1} ; do
@@ -99,25 +98,25 @@ for dir in */; do
 					
 					#set -x
 					# Please remove '&>/dev/null' to identify the warnings (if any)
-					$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX.out" $SP_ADD_OPTIONS #&>/dev/null
+					timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX.out" $SP_ADD_OPTIONS #&>/dev/null
 										
 					if [ -f "a$POSTFIX.out" ]; then
-						$EXEC "./a$POSTFIX.out" -V 2> "./a$POSTFIX.pasim" #&>/dev/null
+						timeout 1800 $EXEC "./a$POSTFIX.out" -V 2> "./a$POSTFIX.pasim" #&>/dev/null
 						RETURNVALUE=$(echo $?)
 						if [ $RETURNVALUE -eq 0 ]; then 
 							if [ -z "$POSTFIX" ]; then
 								platin wcet -i a.pml -b a.out -e $ENTRYFN --report > a.wcet 2>&1
 							fi
 							if [ "$POSTFIX" == "-cet-hybrid" ]; then
-								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-1.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation1
-								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-2.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation2
-								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-4.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation4
-								$COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-8.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation8
+								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-1.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation1
+								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-2.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation2
+								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-4.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation4
+								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-8.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation8
 								
-								$EXEC "./a$POSTFIX-1.out" -V 2> "a$POSTFIX-1.pasim"
-								$EXEC "./a$POSTFIX-2.out" -V 2> "a$POSTFIX-2.pasim"
-								$EXEC "./a$POSTFIX-4.out" -V 2> "a$POSTFIX-4.pasim"
-								$EXEC "./a$POSTFIX-8.out" -V 2> "a$POSTFIX-8.pasim"
+								timeout 1800 $EXEC "./a$POSTFIX-1.out" -V 2> "a$POSTFIX-1.pasim"
+								timeout 1800 $EXEC "./a$POSTFIX-2.out" -V 2> "a$POSTFIX-2.pasim"
+								timeout 1800 $EXEC "./a$POSTFIX-4.out" -V 2> "a$POSTFIX-4.pasim"
+								timeout 1800 $EXEC "./a$POSTFIX-8.out" -V 2> "a$POSTFIX-8.pasim"
 							fi
 							break
 						fi						

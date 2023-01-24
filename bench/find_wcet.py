@@ -5,8 +5,6 @@ file_path = sys.argv[1]
 
 main_function = sys.argv[2]
 
-#print(file_path, " ", main_function)
-
 #open text file in read mode
 text_file = open(file_path, "r")
  

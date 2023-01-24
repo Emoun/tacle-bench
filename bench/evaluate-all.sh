@@ -2,7 +2,7 @@
 
 rm -f result.txt
 
-EXTRACT_WCET="python ../../find_wcet.py"
+EXTRACT_WCET="python3 ../../find_wcet.py"
 
 for dir in */; do
 

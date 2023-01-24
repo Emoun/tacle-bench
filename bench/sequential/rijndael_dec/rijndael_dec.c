@@ -59,7 +59,7 @@ void rijndael_dec_init( void );
 int rijndael_dec_return( void );
 void rijndael_dec_fillrand( unsigned char *buf, int len );
 void rijndael_dec_decfile( struct rijndael_dec_FILE *fin, struct aes *ctx );
-void rijndael_dec_main( void );
+void rijndael_dec_main( void ) __attribute__((noinline));
 
 void rijndael_dec_init( void )
 {

@@ -45,7 +45,7 @@ void cjpeg_transupp_do_rot_90( j_compress_ptr );
 void cjpeg_transupp_do_rot_180( j_compress_ptr );
 void cjpeg_transupp_do_rot_270( j_compress_ptr );
 void cjpeg_transupp_do_transverse( j_compress_ptr );
-void cjpeg_transupp_main( void );
+void cjpeg_transupp_main( void ) __attribute__((noinline));
 int main( void );
 
 

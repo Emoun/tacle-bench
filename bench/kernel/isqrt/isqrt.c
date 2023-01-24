@@ -67,7 +67,7 @@
 
 void isqrt_usqrt( unsigned long x, struct int_sqrt *q );
 void isqrt_init( void );
-void isqrt_main( void );
+void isqrt_main( void ) __attribute__((noinline));
 int isqrt_return( void );
 int main( void );
 

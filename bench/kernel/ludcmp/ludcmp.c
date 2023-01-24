@@ -34,7 +34,7 @@
 void ludcmp_init( void );
 int ludcmp_return( void );
 int  ludcmp_test( int n, double eps );
-void ludcmp_main( void );
+void ludcmp_main( void ) __attribute__((noinline));
 int main( void );
 
 double ludcmp_a[ 50 ][ 50 ], ludcmp_b[ 50 ], ludcmp_x[ 50 ];

@@ -31,7 +31,7 @@ unsigned int prime_randomInteger();
 void prime_initSeed();
 void prime_init ();
 int prime_return ();
-void prime_main ();
+void prime_main () __attribute__((noinline));
 int main( void );
 
 

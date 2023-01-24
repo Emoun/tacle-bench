@@ -59,7 +59,7 @@ void rijndael_enc_init( void );
 int rijndael_enc_return( void );
 void rijndael_enc_fillrand( unsigned char *buf, int len );
 void rijndael_enc_encfile( struct rijndael_enc_FILE *fin, struct aes *ctx );
-void rijndael_enc_main( void );
+void rijndael_enc_main( void ) __attribute__((noinline));
 
 void rijndael_enc_init( void )
 {

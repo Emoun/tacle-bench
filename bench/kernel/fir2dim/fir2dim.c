@@ -31,7 +31,7 @@ void fir2dim_pin_down( float *pimage, float *parray, float *pcoeff,
                        float *poutput );
 void fir2dim_init();
 int fir2dim_return();
-void fir2dim_main();
+void fir2dim_main() __attribute__((noinline));
 int main( void );
 
 

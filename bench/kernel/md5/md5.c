@@ -196,7 +196,7 @@ void md5_InitRandomStruct ( R_RANDOM_STRUCT *randomStruct );
 int md5_R_GetRandomBytesNeeded ( unsigned int *bytesNeeded,
                                  R_RANDOM_STRUCT *randomStruct );
 
-void md5_main( void );
+void md5_main( void ) __attribute__((noinline));
 void md5_init( void );
 int md5_return( void );
 int md5_bytesNeeded;

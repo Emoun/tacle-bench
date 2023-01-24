@@ -67,7 +67,7 @@ void statemate_generic_FH_TUERMODUL_CTRL( void );
 void statemate_generic_EINKLEMMSCHUTZ_CTRL( void );
 void statemate_generic_BLOCK_ERKENNUNG_CTRL( void );
 void statemate_FH_DU( void );
-void statemate_main( void );
+void statemate_main( void ) __attribute__((noinline));
 int statemate_return ( void );
 
 

@@ -37,7 +37,7 @@ float st_square( float );
 void st_calc_Sum_Mean( float *, float *, float * );
 void st_calc_Var_Stddev( float *, float, float *, float * );
 void st_calc_LinCorrCoef( float *, float *, float, float, float * );
-void st_main( void );
+void st_main( void ) __attribute__((noinline));
 int main( void );
 
 

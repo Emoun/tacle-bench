@@ -35,7 +35,7 @@ int minver_mmul( int row_a, int col_a, int row_b, int col_b );
 double minver_fabs( double n );
 void minver_init();
 int minver_return();
-void minver_main();
+void minver_main() __attribute__((noinline));
 int main( void );
 
 /*
