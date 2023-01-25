@@ -10,32 +10,26 @@ fi
 if [ $CHOICE -eq 0 ]; then
 	echo "Checking Traditional"
 	POSTFIX=""
-	OPTIONS="-O2 -mllvm --mpatmos-serialize=a.pml"
 fi
 if [ $CHOICE -eq 1 ]; then
-	echo "Checking Single-path"
-	POSTFIX="-sp"
-	OPTIONS="-O2"
+	echo "Checking Traditional Dual-Issue"
+	POSTFIX="-di"
 fi
 if [ $CHOICE -eq 2 ]; then
-	echo "Checking CET Opposite"
-	POSTFIX="-cet-opposite"
-	OPTIONS="-O2 -mllvm --mpatmos-enable-cet=opposite"
+	echo "Checking Single-Path"
+	POSTFIX="-sp"
 fi
 if [ $CHOICE -eq 3 ]; then
-	echo "Checking CET Counter"
-	POSTFIX="-cet-counter"
-	OPTIONS="-O2 -mllvm --mpatmos-enable-cet=counter"
+	echo "Checking Single-Path Dual-Issue"
+	POSTFIX="-sp-di"
 fi
 if [ $CHOICE -eq 4 ]; then
-	echo "Checking CET hybrid"
-	POSTFIX="-cet-hybrid"
-	OPTIONS="-O2 -mllvm --mpatmos-enable-cet"
+	echo "Checking CET"
+	POSTFIX="-cet"
 fi
 if [ $CHOICE -eq 5 ]; then
-	echo "Checking CET hybrid No-Pseudo"
-	POSTFIX="-cet-pseudo"
-	OPTIONS="-O2 -mllvm --mpatmos-enable-cet -mllvm --mpatmos-disable-pseudo-roots"
+	echo "Checking CET Dual-Issue"
+	POSTFIX="-cet-di"
 fi
 
 COMPILER=patmos-clang
@@ -72,10 +66,6 @@ for dir in */; do
 				for I in {1..1} ; do
 					if [ -f "a$POSTFIX.out" ]; then
 						rm "a$POSTFIX.out"
-						rm -f "a$POSTFIX-1.out"
-						rm -f "a$POSTFIX-2.out"
-						rm -f "a$POSTFIX-4.out"
-						rm -f "a$POSTFIX-8.out"
 						rm -f "a$POSTFIX.stats"
 						rm -f "a$POSTFIX.pml"
 						rm -f "a$POSTFIX.wcet"
@@ -88,35 +78,32 @@ for dir in */; do
 					ENTRYFN=$(grep -E "_Pragma[[:space:]]*\([[:space:]]*\"entrypoint\"" -r * | cut -d ")" -f2 | cut -d "(" -f1)
 					ENTRYFN=${ENTRYFN//[[:blank:]]/}
 					
-					if [ -z "$POSTFIX" ]; then
-						SP_FUN_OPT=""
-						SP_ADD_OPTIONS=""
-					else
-						SP_FUN_OPT="-mllvm --mpatmos-singlepath=$ENTRYFN"
-						SP_ADD_OPTIONS="-mllvm --stats -mllvm --info-output-file=a$POSTFIX.stats"
+					FULL_OPTIONS=""
+					if [[ "$POSTFIX" == *"-di"* ]]; then
+						FULL_OPTIONS="-mllvm --mpatmos-disable-vliw=false"
 					fi
-					
+					if [[ "$POSTFIX" == *"-sp"* || "$POSTFIX" == *"-cet"* ]]; then
+						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN"
+					fi
+					if [[ "$POSTFIX" == *"-cet"* ]]; then
+						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"
+					else
+						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-serialize=a$POSTFIX.pml"
+					fi
+										
 					#set -x
 					# Please remove '&>/dev/null' to identify the warnings (if any)
-					timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX.out" $SP_ADD_OPTIONS #&>/dev/null
+					timeout 300 $COMPILER -O2 $FULL_OPTIONS *.c -o "a$POSTFIX.out" -mllvm --stats -mllvm --info-output-file="a$POSTFIX.stats" #&>/dev/null
 										
 					if [ -f "a$POSTFIX.out" ]; then
 						timeout 1800 $EXEC "./a$POSTFIX.out" -V 2> "./a$POSTFIX.pasim" #&>/dev/null
 						RETURNVALUE=$(echo $?)
 						if [ $RETURNVALUE -eq 0 ]; then 
-							if [ -z "$POSTFIX" ]; then
-								platin wcet -i a.pml -b a.out -e $ENTRYFN --report > a.wcet 2>&1
-							fi
-							if [ "$POSTFIX" == "-cet-hybrid" ]; then
-								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-1.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation1
-								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-2.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation2
-								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-4.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation4
-								timeout 300 $COMPILER $OPTIONS $SP_FUN_OPT *.c -o "a$POSTFIX-8.out" -mllvm --mpatmos-cet-compensation-function=__patmos_main_mem_access_compensation8
-								
-								timeout 1800 $EXEC "./a$POSTFIX-1.out" -V 2> "a$POSTFIX-1.pasim"
-								timeout 1800 $EXEC "./a$POSTFIX-2.out" -V 2> "a$POSTFIX-2.pasim"
-								timeout 1800 $EXEC "./a$POSTFIX-4.out" -V 2> "a$POSTFIX-4.pasim"
-								timeout 1800 $EXEC "./a$POSTFIX-8.out" -V 2> "a$POSTFIX-8.pasim"
+							if [[ "$POSTFIX" == *"-cet"* ]]; then
+								BOUND=$(python3 ../../find_wcet.py "./a$POSTFIX.pasim" $ENTRYFN)
+								echo "best WCET bound: $BOUND" > "a$POSTFIX.wcet"
+							else
+								platin wcet -i "a$POSTFIX.pml" -b "a$POSTFIX.out" -e $ENTRYFN --report > "a$POSTFIX.wcet" 2>&1
 							fi
 							break
 						fi						
