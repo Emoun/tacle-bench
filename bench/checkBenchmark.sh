@@ -12,24 +12,20 @@ if [ $CHOICE -eq 0 ]; then
 	POSTFIX=""
 fi
 if [ $CHOICE -eq 1 ]; then
-	echo "Checking Traditional Dual-Issue"
-	POSTFIX="-di"
-fi
-if [ $CHOICE -eq 2 ]; then
 	echo "Checking Single-Path"
 	POSTFIX="-sp"
 fi
-if [ $CHOICE -eq 3 ]; then
-	echo "Checking Single-Path Dual-Issue"
-	POSTFIX="-sp-di"
+if [ $CHOICE -eq 2 ]; then
+	echo "Checking Single-Path No Pseudo"
+	POSTFIX="-sp-noop"
 fi
-if [ $CHOICE -eq 4 ]; then
+if [ $CHOICE -eq 3 ]; then
 	echo "Checking CET"
 	POSTFIX="-cet"
 fi
-if [ $CHOICE -eq 5 ]; then
-	echo "Checking CET Dual-Issue"
-	POSTFIX="-cet-di"
+if [ $CHOICE -eq 4 ]; then
+	echo "Checking CET No Pseudo"
+	POSTFIX="-cet-noop"
 fi
 
 COMPILER=patmos-clang
@@ -78,9 +74,9 @@ for dir in */; do
 					ENTRYFN=$(grep -E "_Pragma[[:space:]]*\([[:space:]]*\"entrypoint\"" -r * | cut -d ")" -f2 | cut -d "(" -f1)
 					ENTRYFN=${ENTRYFN//[[:blank:]]/}
 					
-					FULL_OPTIONS=""
-					if [[ "$POSTFIX" == *"-di"* ]]; then
-						FULL_OPTIONS="-mllvm --mpatmos-disable-vliw=false"
+					FULL_OPTIONS="-mllvm -mpatmos-disable-vliw=false"
+					if [[ "$POSTFIX" == *"-noop"* ]]; then
+						FULL_OPTIONS="-mllvm --mpatmos-disable-pseudo-roots"
 					fi
 					if [[ "$POSTFIX" == *"-sp"* || "$POSTFIX" == *"-cet"* ]]; then
 						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN"

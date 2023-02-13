@@ -23,21 +23,14 @@ for dir in */; do
 			else
 				BENCHNAME=${BENCH::-1} #Remove the last '/'
 				ENTRYFN=${BENCHNAME}_main
+				
 				if [ -f a.wcet ]; then
-					EXEC_TIME=$(python3 ../../find_wcet.py "./a.pasim" $ENTRYFN)
+					EXEC_TIME=$(python3 ../../find_wcet.py "./a.pasim" $ENTRYFN )
 					echo "${BENCHNAME}TradExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
 					STRING=$(cat a.wcet | grep "best WCET bound:")
 					echo "${BENCHNAME}Trad: ${STRING//[^0-9]/}" >> ../../result.txt 
 				else
 					echo "Missing a.wcet"
-				fi
-				if [ -f a-di.wcet ]; then
-					EXEC_TIME=$(python3 ../../find_wcet.py "./a-di.pasim" $ENTRYFN )
-					echo "${BENCHNAME}TradDIExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
-					STRING=$(cat a-di.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}TradDI: ${STRING//[^0-9]/}" >> ../../result.txt 
-				else
-					echo "Missing a-di.wcet"
 				fi
 				if [ -f a-sp.wcet ]; then
 					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp.pasim" $ENTRYFN )
@@ -47,13 +40,13 @@ for dir in */; do
 				else
 					echo "Missing a-sp.wcet"
 				fi
-				if [ -f a-sp-di.wcet ]; then
-					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp-di.pasim" $ENTRYFN )
-					echo "${BENCHNAME}SPDIExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
-					STRING=$(cat a-sp-di.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}SPDI: ${STRING//[^0-9]/}" >> ../../result.txt 
+				if [ -f a-sp-noop.wcet ]; then
+					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp-noop.pasim" $ENTRYFN )
+					echo "${BENCHNAME}SPNOOPExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
+					STRING=$(cat a-sp-noop.wcet | grep "best WCET bound:")
+					echo "${BENCHNAME}SPNOOP: ${STRING//[^0-9]/}" >> ../../result.txt 
 				else
-					echo "Missing a-sp-di.wcet"
+					echo "Missing a-sp-noop.wcet"
 				fi
 				if [ -f a-cet.wcet ]; then
 					STRING=$(cat a-cet.wcet | grep "best WCET bound:")
@@ -61,11 +54,11 @@ for dir in */; do
 				else
 					echo "Missing a-cet.wcet"
 				fi
-				if [ -f a-cet-di.wcet ]; then
-					STRING=$(cat a-cet-di.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}CETDI: ${STRING//[^0-9]/}" >> ../../result.txt 
+				if [ -f a-cet-noop.wcet ]; then
+					STRING=$(cat a-cet-noop.wcet | grep "best WCET bound:")
+					echo "${BENCHNAME}CETNOOP: ${STRING//[^0-9]/}" >> ../../result.txt 
 				else
-					echo "Missing a-cet-di.wcet"
+					echo "Missing a-cet-noop.wcet"
 				fi
 				echo "" >> ../../result.txt 
 			fi
