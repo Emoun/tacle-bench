@@ -2201,6 +2201,7 @@ int gsm_enc_return( void )
   return gsm_enc_result;
 }
 
+void gsm_enc_main( void ) __attribute__((noinline));
 void _Pragma( "entrypoint" ) gsm_enc_main( void )
 {
   gsm r;

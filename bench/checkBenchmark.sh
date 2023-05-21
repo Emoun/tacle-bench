@@ -27,6 +27,22 @@ if [ $CHOICE -eq 4 ]; then
 	echo "Checking CET No Pseudo"
 	POSTFIX="-cet-noop"
 fi
+if [ $CHOICE -eq 5 ]; then
+	echo "Checking CET (OPC)"
+	POSTFIX="-cet-opc"
+fi
+if [ $CHOICE -eq 6 ]; then
+	echo "Checking CET No Pseudo (OPC)"
+	POSTFIX="-cet-noop-opc"
+fi
+if [ $CHOICE -eq 7 ]; then
+	echo "Checking CET (DCC)"
+	POSTFIX="-cet-dcc"
+fi
+if [ $CHOICE -eq 8 ]; then
+	echo "Checking CET No Pseudo (DCC)"
+	POSTFIX="-cet-noop-dcc"
+fi
 
 COMPILER=patmos-clang
 EXEC=pasim
@@ -83,6 +99,11 @@ for dir in */; do
 					fi
 					if [[ "$POSTFIX" == *"-cet"* ]]; then
 						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"
+						if [[ "$POSTFIX" == *"-opc"* ]]; then
+							FULL_OPTIONS="$FULL_OPTIONS=opposite"
+						elif [[ "$POSTFIX" == *"-dcc"* ]]; then
+							FULL_OPTIONS="$FULL_OPTIONS=counter"
+						fi
 					else
 						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-serialize=a$POSTFIX.pml"
 					fi
@@ -99,7 +120,7 @@ for dir in */; do
 								BOUND=$(python3 ../../find_wcet.py "./a$POSTFIX.pasim" $ENTRYFN)
 								echo "best WCET bound: $BOUND" > "a$POSTFIX.wcet"
 							else
-								platin wcet -i "a$POSTFIX.pml" -b "a$POSTFIX.out" -e $ENTRYFN --report > "a$POSTFIX.wcet" 2>&1
+								timeout 300 platin wcet -i "a$POSTFIX.pml" -b "a$POSTFIX.out" -e $ENTRYFN --report > "a$POSTFIX.wcet" 2>&1
 							fi
 							break
 						fi						

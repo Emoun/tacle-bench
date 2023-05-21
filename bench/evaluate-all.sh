@@ -12,7 +12,7 @@ function  extract_sp_stats {
 	
 	STRING=$(du -sb $OUT_FILE)
 	echo "${PREFIX}Size: ${STRING//[^0-9]/}" >> ../../result.txt
-	local STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Number of instructions inserted")
+	local STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Instruction bytes in single-path code")
 	echo "${PREFIX}Instrs: ${STRING//[^0-9]/}" >> ../../result.txt
 	STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Number of functions used in single-path")
 	echo "${PREFIX}Funcs: ${STRING//[^0-9]/}" >> ../../result.txt
@@ -22,6 +22,8 @@ function  extract_sp_stats {
 	echo "${PREFIX}Calls: ${STRING//[^0-9]/}" >> ../../result.txt
 	STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Number of call instructions from & to pseudo-root functions")
 	echo "${PREFIX}PseudoCalls: ${STRING//[^0-9]/}" >> ../../result.txt
+	STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Number of single-path loop counters used")
+	echo "${PREFIX}Counters: ${STRING//[^0-9]/}" >> ../../result.txt
 }
 
 function  extract_cet_stats {
@@ -30,8 +32,6 @@ function  extract_cet_stats {
 	local STATS_FILE="${FILE_NAME}.stats"
 	local OUT_FILE="${FILE_NAME}.out"
 	
-	STRING=$(du -sb $OUT_FILE)
-	echo "${PREFIX}Size: ${STRING//[^0-9]/}" >> ../../result.txt
 	local STRING=$(cat $STATS_FILE | grep "patmos-const-exec        - Number of non-phi instructions added by the 'counter' compensation algorithm")
 	echo "${PREFIX}DCCInstrs: ${STRING//[^0-9]/}" >> ../../result.txt
 	STRING=$(cat $STATS_FILE | grep "patmos-const-exec        - Number of non-phi instructions added by the 'opposite' constant execution time compensation")
@@ -73,26 +73,7 @@ for dir in */; do
 					echo "Missing a.wcet"
 				fi
 				
-				if [ -f a-sp.wcet ]; then
-					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp.pasim" $ENTRYFN )
-					echo "${BENCHNAME}SPExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
-					STRING=$(cat a-sp.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}SP: ${STRING//[^0-9]/}" >> ../../result.txt 
-				else
-					echo "Missing a-sp.wcet"
-				fi
-				extract_sp_stats "${BENCHNAME}SP" "a-sp"
-				
-				if [ -f a-sp-noop.wcet ]; then
-					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp-noop.pasim" $ENTRYFN )
-					echo "${BENCHNAME}SPNOOPExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
-					STRING=$(cat a-sp-noop.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}SPNOOP: ${STRING//[^0-9]/}" >> ../../result.txt 
-				else
-					echo "Missing a-sp-noop.wcet"
-				fi
-				extract_sp_stats "${BENCHNAME}SPNOOP" "a-sp-noop"
-				
+				extract_sp_stats "${BENCHNAME}CET" "a-cet"
 				if [ -f a-cet.wcet ]; then
 					STRING=$(cat a-cet.wcet | grep "best WCET bound:")
 					echo "${BENCHNAME}CET: ${STRING//[^0-9]/}" >> ../../result.txt 
@@ -100,7 +81,8 @@ for dir in */; do
 					echo "Missing a-cet.wcet"
 				fi
 				extract_cet_stats "${BENCHNAME}CET" "a-cet"
-				
+								
+				extract_sp_stats "${BENCHNAME}CETNOOP" "a-cet-noop"
 				if [ -f a-cet-noop.wcet ]; then
 					STRING=$(cat a-cet-noop.wcet | grep "best WCET bound:")
 					echo "${BENCHNAME}CETNOOP: ${STRING//[^0-9]/}" >> ../../result.txt 
