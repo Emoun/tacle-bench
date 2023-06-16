@@ -95,7 +95,7 @@ for dir in */; do
 						FULL_OPTIONS="-mllvm --mpatmos-disable-pseudo-roots"
 					fi
 					if [[ "$POSTFIX" == *"-sp"* || "$POSTFIX" == *"-cet"* ]]; then
-						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN"
+						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN -mllvm --mpatmos-disable-countless-loops -mllvm --mpatmos-enable-old-singlepath"
 					fi
 					if [[ "$POSTFIX" == *"-cet"* ]]; then
 						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"

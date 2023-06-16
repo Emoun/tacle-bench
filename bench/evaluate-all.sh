@@ -12,7 +12,7 @@ function  extract_sp_stats {
 	
 	STRING=$(du -sb $OUT_FILE)
 	echo "${PREFIX}Size: ${STRING//[^0-9]/}" >> ../../result.txt
-	local STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Instruction bytes in single-path code")
+	local STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Number of instructions inserted")
 	echo "${PREFIX}Instrs: ${STRING//[^0-9]/}" >> ../../result.txt
 	STRING=$(cat $STATS_FILE | grep "patmos-singlepath        - Number of functions used in single-path")
 	echo "${PREFIX}Funcs: ${STRING//[^0-9]/}" >> ../../result.txt
@@ -73,23 +73,25 @@ for dir in */; do
 					echo "Missing a.wcet"
 				fi
 				
-				extract_sp_stats "${BENCHNAME}CET" "a-cet"
-				if [ -f a-cet.wcet ]; then
-					STRING=$(cat a-cet.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}CET: ${STRING//[^0-9]/}" >> ../../result.txt 
+				if [ -f a-sp.wcet ]; then
+					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp.pasim" $ENTRYFN )
+					echo "${BENCHNAME}SPExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
+					STRING=$(cat a-sp.wcet | grep "best WCET bound:")
+					echo "${BENCHNAME}SP: ${STRING//[^0-9]/}" >> ../../result.txt 
 				else
-					echo "Missing a-cet.wcet"
+					echo "Missing a-sp.wcet"
 				fi
-				extract_cet_stats "${BENCHNAME}CET" "a-cet"
+				extract_sp_stats "${BENCHNAME}SP" "a-sp"
 								
-				extract_sp_stats "${BENCHNAME}CETNOOP" "a-cet-noop"
-				if [ -f a-cet-noop.wcet ]; then
-					STRING=$(cat a-cet-noop.wcet | grep "best WCET bound:")
-					echo "${BENCHNAME}CETNOOP: ${STRING//[^0-9]/}" >> ../../result.txt 
+				if [ -f a-sp-noop.wcet ]; then
+					EXEC_TIME=$(python3 ../../find_wcet.py "./a-sp-noop.pasim" $ENTRYFN )
+					echo "${BENCHNAME}SPNOOPExec: ${EXEC_TIME//[^0-9]/}" >> ../../result.txt 
+					STRING=$(cat a-sp-noop.wcet | grep "best WCET bound:")
+					echo "${BENCHNAME}SPNOOP: ${STRING//[^0-9]/}" >> ../../result.txt 
 				else
-					echo "Missing a-cet-noop.wcet"
-				fi
-				extract_cet_stats "${BENCHNAME}CETNOOP" "a-cet-noop"
+					echo "Missing a-sp-noop.wcet"
+				fi				
+				extract_sp_stats "${BENCHNAME}SPNOOP" "a-sp-noop"
 				
 				echo "" >> ../../result.txt 
 			fi
