@@ -12,36 +12,48 @@ if [ $CHOICE -eq 0 ]; then
 	POSTFIX=""
 fi
 if [ $CHOICE -eq 1 ]; then
+	echo "Checking Traditional Single-Issue"
+	POSTFIX="-si"
+fi
+if [ $CHOICE -eq 2 ]; then
 	echo "Checking Single-Path"
 	POSTFIX="-sp"
 fi
-if [ $CHOICE -eq 2 ]; then
+if [ $CHOICE -eq 3 ]; then
 	echo "Checking Single-Path No Pseudo"
 	POSTFIX="-sp-noop"
 fi
-if [ $CHOICE -eq 3 ]; then
+if [ $CHOICE -eq 4 ]; then
 	echo "Checking CET"
 	POSTFIX="-cet"
 fi
-if [ $CHOICE -eq 4 ]; then
+if [ $CHOICE -eq 5 ]; then
 	echo "Checking CET No Pseudo"
 	POSTFIX="-cet-noop"
 fi
-if [ $CHOICE -eq 5 ]; then
+if [ $CHOICE -eq 6 ]; then
 	echo "Checking CET (OPC)"
 	POSTFIX="-cet-opc"
 fi
-if [ $CHOICE -eq 6 ]; then
+if [ $CHOICE -eq 7 ]; then
 	echo "Checking CET No Pseudo (OPC)"
 	POSTFIX="-cet-noop-opc"
 fi
-if [ $CHOICE -eq 7 ]; then
+if [ $CHOICE -eq 8 ]; then
 	echo "Checking CET (DCC)"
 	POSTFIX="-cet-dcc"
 fi
-if [ $CHOICE -eq 8 ]; then
+if [ $CHOICE -eq 9 ]; then
 	echo "Checking CET No Pseudo (DCC)"
 	POSTFIX="-cet-noop-dcc"
+fi
+if [ $CHOICE -eq 10 ]; then
+	echo "Checking CET Permissive Dual-Issue"
+	POSTFIX="-cet-pdi"
+fi
+if [ $CHOICE -eq 11 ]; then
+	echo "Checking CET Single-Issue"
+	POSTFIX="-cet-si"
 fi
 
 COMPILER=patmos-clang
@@ -90,12 +102,20 @@ for dir in */; do
 					ENTRYFN=$(grep -E "_Pragma[[:space:]]*\([[:space:]]*\"entrypoint\"" -r * | cut -d ")" -f2 | cut -d "(" -f1)
 					ENTRYFN=${ENTRYFN//[[:blank:]]/}
 					
-					FULL_OPTIONS="-mllvm -mpatmos-disable-vliw=false"
+					FULL_OPTIONS=""
+					PASIM_OPTIONS="-V --print-stats $ENTRYFN"
+					if [[ "$POSTFIX" != *"-si"* ]]; then
+						FULL_OPTIONS="-mllvm --mpatmos-disable-vliw=false"
+					fi
 					if [[ "$POSTFIX" == *"-noop"* ]]; then
 						FULL_OPTIONS="-mllvm --mpatmos-disable-pseudo-roots"
 					fi
 					if [[ "$POSTFIX" == *"-sp"* || "$POSTFIX" == *"-cet"* ]]; then
 						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN"
+					fi
+					if [[ "$POSTFIX" == *"-pdi"* ]]; then
+						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-disable-permissive-dual-issue=false"
+						PASIM_OPTIONS="$PASIM_OPTIONS --permissive-dual-issue"
 					fi
 					if [[ "$POSTFIX" == *"-cet"* ]]; then
 						FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"
@@ -113,11 +133,11 @@ for dir in */; do
 					timeout 300 $COMPILER -O2 $FULL_OPTIONS *.c -o "a$POSTFIX.out" -mllvm --stats -mllvm --info-output-file="a$POSTFIX.stats" #&>/dev/null
 										
 					if [ -f "a$POSTFIX.out" ]; then
-						timeout 1800 $EXEC "./a$POSTFIX.out" -V 2> "./a$POSTFIX.pasim" #&>/dev/null
+						timeout 1800 $EXEC "./a$POSTFIX.out" $PASIM_OPTIONS 2> "./a$POSTFIX.pasim" #&>/dev/null
 						RETURNVALUE=$(echo $?)
 						if [ $RETURNVALUE -eq 0 ]; then 
 							if [[ "$POSTFIX" == *"-cet"* ]]; then
-								BOUND=$(python3 ../../find_wcet.py "./a$POSTFIX.pasim" $ENTRYFN)
+								BOUND=$(python3 ../../find_using_regex.py "./a$POSTFIX.pasim" "<$ENTRYFN>\n.*\n\s*1\s*(\d*)" 1)
 								echo "best WCET bound: $BOUND" > "a$POSTFIX.wcet"
 							else
 								timeout 300 platin wcet -i "a$POSTFIX.pml" -b "a$POSTFIX.out" -e $ENTRYFN --report > "a$POSTFIX.wcet" 2>&1

@@ -3,7 +3,9 @@ import sys
 
 file_path = sys.argv[1]
 
-main_function = sys.argv[2]
+regex = sys.argv[2]
+
+group_to_return = int(sys.argv[3])
 
 #open text file in read mode
 text_file = open(file_path, "r")
@@ -14,8 +16,6 @@ file_content = text_file.read()
 #close file
 text_file.close()
 
-regex = "<" + main_function + ">\n.*\n\s*1\s*(\d*)"
+result = re.search(regex, file_content).group(group_to_return)
 
-exec_cycles = re.search(regex, file_content).group(1)
-
-print(exec_cycles)
+print(result)
