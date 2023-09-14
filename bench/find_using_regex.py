@@ -16,6 +16,12 @@ file_content = text_file.read()
 #close file
 text_file.close()
 
-result = re.search(regex, file_content).group(group_to_return)
-
+search_result = re.search(regex, file_content)
+if(search_result == None):
+    print("Did not find in text.");
+    print("File: ", file_path);
+    print("Regext: ", regex);
+    result = ""
+else: 
+    result = search_result.group(group_to_return)
 print(result)
