@@ -19,6 +19,9 @@ CONFIG_NAMES=(
 	"CET Permissive Dual-Issue"
 	"CET No Equivalence Class Scheduling"
 	"CET Single-Issue No Equivalence Class Scheduling"
+	"CET Compensation function 1"
+	"CET Compensation function 2"
+	"CET Compensation function 8"
 )
 CONFIG_IDS=(
 	"trad" 
@@ -33,6 +36,9 @@ CONFIG_IDS=(
 	"cet-pdi"
 	"cet-necs"
 	"cet-si-necs"
+	"cet-comp1"
+	"cet-comp2"
+	"cet-comp8"
 )
 CONFIG_PREFIXES=(
 	"Trad" 
@@ -47,6 +53,9 @@ CONFIG_PREFIXES=(
 	"CETPDI"
 	"CETNECS"
 	"CETSINECS"
+	"CETCOMPONE"
+	"CETCOMPTWO"
+	"CETCOMPEIG"
 )
 
 WORKING_DIR=$(pwd)
@@ -59,7 +68,7 @@ run_bench(){
 	# Clean from previous run
 	rm -rf "$POSTFIX"
 
-	REPEAT=10
+	REPEAT=1
 
 	for i in $(seq 1 $REPEAT); do
 		
@@ -76,11 +85,25 @@ run_bench(){
 			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN"
 		fi
 		if [[ "$POSTFIX" == *"-pdi"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-disable-permissive-dual-issue=false"
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-permissive-dual-issue"
 			PASIM_OPTIONS="$PASIM_OPTIONS --permissive-dual-issue"
 		fi
 		if [[ "$POSTFIX" == *"-necs"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-singlepath-scheduler-equivalence-class=false"
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-disable-singlepath-scheduler-equivalence-class"
+		fi
+		if [[ "$POSTFIX" == *"-comp"* ]]; then
+			COMP_FN=""
+			if [[ "$POSTFIX" == *"-comp1"* ]]; then
+				COMP_FN="__patmos_main_mem_access_compensation1_di"
+			fi
+			if [[ "$POSTFIX" == *"-comp2"* ]]; then
+				COMP_FN="__patmos_main_mem_access_compensation2_di"
+			fi
+			if [[ "$POSTFIX" == *"-comp8"* ]]; then
+				COMP_FN="__patmos_main_mem_access_compensation8_di"
+			fi
+			
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-cet-compensation-function=$COMP_FN"
 		fi
 		if [[ "$POSTFIX" == *"cet"* ]]; then
 			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"

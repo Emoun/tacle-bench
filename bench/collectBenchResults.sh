@@ -25,6 +25,8 @@ fi
 if [ -f "$WCET_FILE" ]; then
 	STRING=$(cat "$WCET_FILE" | grep "best WCET bound:")
 	echo "${PREFIX}Wcet: ${STRING//[^0-9]/}" >> $RESULT_FILE
+	STRING=$(cat "$WCET_FILE" | grep "cache-max-cycles:")
+	echo "${PREFIX}WcetMainMemStall: ${STRING//[^0-9]/}" >> $RESULT_FILE
 else
 	echo "Missing $WCET_FILE"
 fi

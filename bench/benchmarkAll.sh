@@ -24,20 +24,22 @@ do
 		"lms" `#missing loop bounds` \
 		"ludcmp" `# Runtime error (Traditional)` \
 		"md5" `#Compile error (Singlepath, "Loop has no bound. Loop bound expected in the following MBB but was not found: 'while.cond'!")` \
-		"minver" `#Runtime Failure (CET)` \
+		"minver" `#Runtime Failure (CET-OPC)` \
 		"pm" `#pasim saturate (CET)` \
 		"prime" `#Compile error (Singlepath, "Loop has no bound. Loop bound expected in the following MBB but was not found: 'for.cond'!")` \
 		"quicksort" `#Recursive call` \
 		"recursion" `#Recursive call` \
-		"sha" `#unrecognized loop bound (dont know where, in the code all seem to have loop bounds, through twice the bounds were 0)` \
+		"sha" `##Compile Failure (CET)` \
 		"parallel" `#Unsupported build` \
 		"ammunition" `#Recursive call` \
 		"anagram" `#Recursive call` \
+		"audiobeam" `#Runtime Failure (CET)` \
 		"dijkstra" `#Timeout (CET)` \
 		"epic" `#Timeout (CET)` \
 		"g723_enc" `#Runtime Failure (CET)` \
 		"gsm_dec" `#Compile Failure (CET)` \
 		"gsm_enc" `#Compile Failure (CET, LLVM ERROR: llvm.memset length argument not a constant value)` \
+		"huff_dec" `#Runtime Failure (CET)` \
 		"huff_enc" `#Recursive call` \
 		"mpeg2" `#Compile Failure (CET, IndexedMap.h:51... && index out of bounds!)` \
 		"petrinet" `# Compile Failure (CET, manual oom)` \
@@ -85,4 +87,4 @@ RESULT_FILE="$BASEDIR/results.txt"
 
 rm -f "$RESULT_FILE"
 
-$BASEDIR/verifyAndBenchmark.sh "0 1 4 5 6 9 10 11" "$CHOSEN_BENCHES" "$RESULT_FILE"
+$BASEDIR/verifyAndBenchmark.sh "0 1 4 5 6 7 8 9 10 11 12 13 14" "$CHOSEN_BENCHES" "$RESULT_FILE"
