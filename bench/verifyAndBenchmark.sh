@@ -22,6 +22,12 @@ CONFIG_NAMES=(
 	"CET Compensation function 1"
 	"CET Compensation function 2"
 	"CET Compensation function 8"
+	"Single-Path Old Single-Issue No Pseudo"
+	"Single-Path Single-Issue No Pseudo"
+	"CET Old Single-Issue No Pseudo (OPC)"
+	"CET Single-Issue No Pseudo (OPC)"
+	"CET Old"
+	"SP Old"
 )
 CONFIG_IDS=(
 	"trad" 
@@ -39,6 +45,12 @@ CONFIG_IDS=(
 	"cet-comp1"
 	"cet-comp2"
 	"cet-comp8"
+	"sp-old-si-noop"
+	"sp-si-noop"
+	"cet-old-si-noop-opc"
+	"cet-si-noop-opc"
+	"sp-old"
+	"cet-old"
 )
 CONFIG_PREFIXES=(
 	"Trad" 
@@ -56,6 +68,12 @@ CONFIG_PREFIXES=(
 	"CETCOMPONE"
 	"CETCOMPTWO"
 	"CETCOMPEIG"
+	"SPOLDSINOOP"
+	"SPSINOOP"
+	"CETOLDSINOOPOPC"
+	"CETSINOOPOPC"
+	"SPOLD"
+	"CETOLD"
 )
 
 WORKING_DIR=$(pwd)
@@ -104,6 +122,9 @@ run_bench(){
 			fi
 			
 			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-cet-compensation-function=$COMP_FN"
+		fi
+		if [[ "$POSTFIX" == *"-old"* ]]; then
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-old-singlepath "
 		fi
 		if [[ "$POSTFIX" == *"cet"* ]]; then
 			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"
