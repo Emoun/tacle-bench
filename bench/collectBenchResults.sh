@@ -17,6 +17,10 @@ if [ -f "$PASIM_FILE" ]; then
 	echo "${PREFIX}Exec: ${STRING//[^0-9]/}" >> $RESULT_FILE
 	STRING=$(python3 ../../find_using_regex.py "./$PASIM_FILE" "Main Memory Statistics:.*\n(.*\n){6}\s*Stall Cycles\s*:\s*(\d*)" 2)
 	echo "${PREFIX}ExecMainMemStall: ${STRING//[^0-9]/}" >> $RESULT_FILE
+	STRING=$(python3 ../../find_using_regex.py "./$PASIM_FILE" "Stack Cache Statistics:.*\n(.*\n){6}\s*Bytes Read\s*:\s*(\d*)" 2)
+	echo "${PREFIX}ExecStackReadBytes: ${STRING//[^0-9]/}" >> $RESULT_FILE
+	STRING=$(python3 ../../find_using_regex.py "./$PASIM_FILE" "Stack Cache Statistics:.*\n(.*\n){8}\s*Bytes Written\s*:\s*(\d*)" 2)
+	echo "${PREFIX}ExecStackWriteBytes: ${STRING//[^0-9]/}" >> $RESULT_FILE
 else
 	echo "Missing $PASIM_FILE for $PREFIX"
 fi

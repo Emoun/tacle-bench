@@ -14,7 +14,6 @@ for BENCH in $ALL_BENCHMARKS
 do
 	DO_IGNORE=0
 	for IGN in \
-		"powerwindow" `# missing loop bound` \
 		"bitcount" `#Recursive call` \
 		"bitonic" `#Recursive call` \
 		"fac" `#Recursive call` \
