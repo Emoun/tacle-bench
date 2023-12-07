@@ -31,7 +31,7 @@
 */
 
 void rad2deg_init( void );
-void rad2deg_main( void );
+void rad2deg_main( void ) __attribute__((noinline));
 int rad2deg_return( void );
 int main( void );
 

@@ -26,7 +26,7 @@
 void duff_copy( char *to, char *from, int count );
 void duff_initialize( char *arr, int length );
 void duff_init();
-void duff_main( void );
+void duff_main( void ) __attribute__((noinline));
 int duff_return( void );
 int main( void );
 

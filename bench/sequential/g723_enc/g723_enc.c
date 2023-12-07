@@ -105,7 +105,7 @@ int g723_enc_pack_output(
 
 void g723_enc_init();
 int g723_enc_return();
-void g723_enc_main();
+void g723_enc_main() __attribute__((noinline));
 int main( void );
 
 /*

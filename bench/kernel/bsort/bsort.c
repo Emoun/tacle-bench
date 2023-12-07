@@ -28,7 +28,7 @@
 */
 
 void bsort_init( void );
-void bsort_main( void );
+void bsort_main( void ) __attribute__((noinline));
 int bsort_return( void );
 int bsort_Initialize( int Array[] );
 int bsort_BubbleSort( int Array[] );

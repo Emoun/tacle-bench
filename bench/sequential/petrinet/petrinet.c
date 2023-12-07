@@ -40,7 +40,7 @@ int petrinet_main_iters_dummy_i = 0,
 */
 void petrinet_init( void );
 int petrinet_return( void );
-void petrinet_main( void );
+void petrinet_main( void ) __attribute__((noinline));
 int main( void );
 
 

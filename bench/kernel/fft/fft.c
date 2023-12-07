@@ -82,7 +82,7 @@ int fft_convert( float value );
 void fft_bit_reduct( register int *int_pointer );
 void fft_pin_down( int input_data[  ] );
 void fft_init( void );
-void fft_main( void );
+void fft_main( void ) __attribute__((noinline));
 int fft_return( void );
 int main( void );
 

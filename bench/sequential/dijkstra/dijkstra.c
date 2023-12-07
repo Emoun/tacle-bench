@@ -62,7 +62,7 @@ int dijkstra_enqueue( int node, int dist, int prev );
 void dijkstra_dequeue( int *node, int *dist, int *prev );
 int dijkstra_qcount( void );
 int dijkstra_find( int chStart, int chEnd );
-void dijkstra_main( void );
+void dijkstra_main( void ) __attribute__((noinline));
 int main( void );
 
 void dijkstra_init( void )

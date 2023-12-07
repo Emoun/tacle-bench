@@ -27,7 +27,7 @@
 */
 
 void cosf_init( void );
-void cosf_main( void );
+void cosf_main( void ) __attribute__((noinline));
 int cosf_return( void );
 int main( void );
 

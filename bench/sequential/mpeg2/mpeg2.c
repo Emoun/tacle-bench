@@ -89,7 +89,7 @@ int mpeg2_bdist1( unsigned char *, unsigned char *, unsigned char *, int, int,
 int mpeg2_bdist2( unsigned char *, unsigned char *, unsigned char *, int, int,
                   int, int, int, int );
 int mpeg2_variance( unsigned char *, int );
-void mpeg2_main( void );
+void mpeg2_main( void ) __attribute__((noinline));
 int main( void );
 
 

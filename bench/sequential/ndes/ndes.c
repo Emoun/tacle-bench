@@ -54,7 +54,7 @@ unsigned long ndes_getbit( ndes_immense source, int bitno, int nbits );
 void ndes_ks( /*immense key, */int n, ndes_great *kn );
 void ndes_init( void );
 int ndes_return( void );
-void ndes_main( void );
+void ndes_main( void ) __attribute__((noinline));
 int main( void );
 
 /*

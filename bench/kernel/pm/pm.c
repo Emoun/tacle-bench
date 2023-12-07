@@ -85,7 +85,7 @@ void pm_init_data( pm_data_t *pmdata,
                    pm_float_array_t *lib,
                    pm_float_array_t *pattern );
 void pm_clean( pm_data_t *pmdata );
-void pm_main( void );
+void pm_main( void ) __attribute__((noinline));
 void pm_init( void );
 int pm_return( void );
 int pm_kernel( pm_data_t *pmdata );

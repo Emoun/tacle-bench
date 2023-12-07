@@ -31,7 +31,7 @@ void fir2dim_pin_down( float *pimage, float *parray, float *pcoeff,
                        float *poutput );
 void fir2dim_init();
 int fir2dim_return();
-void fir2dim_main();
+void fir2dim_main() __attribute__((noinline));
 int main( void );
 
 
@@ -144,54 +144,19 @@ void fir2dim_pin_down( float *pimage, float *parray, float *pcoeff,
 
 void _Pragma( "entrypoint" ) fir2dim_main()
 {
-  register float *parray  = &fir2dim_array[ 0 ], *parray2, *parray3 ;
-  register float *pcoeff  = &fir2dim_coefficients[ 0 ] ;
-  register float *poutput = &fir2dim_output[ 0 ]       ;
-  int k, f, i;
+  int i;
 
-  fir2dim_pin_down( &fir2dim_image[ 0 ], &fir2dim_array[ 0 ],
-                    &fir2dim_coefficients[ 0 ], &fir2dim_output[ 0 ] );
+	_Pragma( "loopbound min 3 max 3" )
+	for ( i = 0 ; i < 3 ; i++ )
+		fir2dim_output[ 0 ] += 1.0 ;
 
-  poutput = &fir2dim_output[ 0 ]       ;
 
-  _Pragma( "loopbound min 4 max 4" )
-  for ( k = 0 ; k < 4 ; k++ ) {
-
-    _Pragma( "loopbound min 4 max 4" )
-    for ( f = 0 ; f < 4 ; f++ ) {
-      pcoeff = &fir2dim_coefficients[ 0 ] ;
-      parray = &fir2dim_array[ k * 6 + f ] ;
-      parray2 = parray + 6 ;
-      parray3 = parray + 6 + 6 ;
-
-      *poutput = 0 ;
-
-      _Pragma( "loopbound min 3 max 3" )
-      for ( i = 0 ; i < 3 ; i++ )
-        *poutput += *pcoeff++ **parray++ ;
-
-      _Pragma( "loopbound min 3 max 3" )
-      for ( i = 0 ; i < 3 ; i++ )
-        *poutput += *pcoeff++ **parray2++ ;
-
-      _Pragma( "loopbound min 3 max 3" )
-      for ( i = 0 ; i < 3 ; i++ )
-        *poutput += *pcoeff++ **parray3++ ;
-
-      poutput++ ;
-    }
-  }
-
-  fir2dim_result = fir2dim_output[ 0 ] + fir2dim_output[ 5 ] + fir2dim_array[ 9 ];
-
-  fir2dim_pin_down( &fir2dim_image[ 0 ], &fir2dim_array[ 0 ],
-                    &fir2dim_coefficients[ 0 ], &fir2dim_output[ 0 ] );
 }
 
 
 int main( void )
 {
-  fir2dim_init();
+  //fir2dim_init();
   fir2dim_main();
 
   return ( fir2dim_return() );

@@ -34,7 +34,7 @@
 
 void lift_controller();
 void lift_init();
-void lift_main();
+void lift_main() __attribute__((noinline));
 int lift_return();
 
 

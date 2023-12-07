@@ -54,7 +54,7 @@
 
 void iir_init( void );
 int iir_return( void );
-void iir_main( void );
+void iir_main( void ) __attribute__((noinline));
 int main( void );
 
 

@@ -40,7 +40,7 @@ long binarysearch_randomInteger( void );
 void binarysearch_init( void );
 int binarysearch_return( void );
 int binarysearch_binary_search( int );
-void binarysearch_main( void );
+void binarysearch_main( void ) __attribute__((noinline));
 int main( void );
 
 

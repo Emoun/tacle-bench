@@ -2484,6 +2484,7 @@ void susan_init( void )
   // bt=50; /* Brightness threshold, all modes, (default=20) */
 }
 
+void susan_main( void ) __attribute__((noinline));
 void _Pragma( "entrypoint" ) susan_main( void )
 {
   susan_call_susan( &susan_file, 0 );

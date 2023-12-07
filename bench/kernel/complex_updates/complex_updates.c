@@ -39,7 +39,7 @@
 
 void complex_updates_pin_down( float *pa, float *pb, float *pc, float *pd );
 void complex_updates_init( void );
-void complex_updates_main( void );
+void complex_updates_main( void ) __attribute__((noinline));
 int main( void );
 
 

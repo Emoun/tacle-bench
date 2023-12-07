@@ -36,7 +36,7 @@
 
 void cubic_solveCubic( float a, float b, float c, float d,
                  int *solutions, float *x );
-void cubic_main( void );
+void cubic_main( void ) __attribute__((noinline));
 void cubic_init( void );
 int cubic_return( void );
 int main( void );

@@ -196,7 +196,7 @@ void md5_InitRandomStruct ( R_RANDOM_STRUCT *randomStruct );
 int md5_R_GetRandomBytesNeeded ( unsigned int *bytesNeeded,
                                  R_RANDOM_STRUCT *randomStruct );
 
-void md5_main( void );
+void md5_main( void ) __attribute__((noinline));
 void md5_init( void );
 int md5_return( void );
 int md5_bytesNeeded;
@@ -301,7 +301,7 @@ void md5_update ( MD5_CTX *context, unsigned char *input,
     md5_memcpy ( ( POINTER )&context->buffer[ index ], ( POINTER )input, partLen );
     md5_transform ( context->state, context->buffer );
 
-    _Pragma( "loopbound min 0 max 0" )
+    _Pragma( "loopbound min 0 max 1" )
     for ( i = partLen; i + 63 < inputLen; i += 64 )
       md5_transform ( context->state, &input[ i ] );
 
@@ -574,7 +574,7 @@ void md5_InitRandomStruct ( R_RANDOM_STRUCT *randomStruct )
   /* Initialize with all zero seed bytes, which will not yield an actual
        random number output.
   */
-  _Pragma( "loopbound min 256 max 256" )
+  _Pragma( "loopbound min 255 max 256" )
   while ( 1 ) {
     md5_R_GetRandomBytesNeeded ( &bytesNeeded, randomStruct );
     if ( bytesNeeded == 0 )

@@ -27,7 +27,7 @@
 */
 
 void cover_init( void );
-void cover_main( void );
+void cover_main( void ) __attribute__((noinline));
 int cover_return( void );
 int cover_swi10( int );
 int cover_swi50( int );

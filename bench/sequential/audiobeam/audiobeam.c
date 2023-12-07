@@ -33,7 +33,7 @@
 
 void audiobeam_init();
 int audiobeam_return();
-void audiobeam_main( void );
+void audiobeam_main( void ) __attribute__((noinline));
 int main( void );
 void audiobeam_preprocess_delays( struct audiobeam_PreprocessedDelays
                                   prep_delays[  ], float *delays );

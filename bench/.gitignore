@@ -1,0 +1,7 @@
+*.out
+*.stats
+*.pml
+*.wcet
+*.pasim
+*.txt
+*.asm
