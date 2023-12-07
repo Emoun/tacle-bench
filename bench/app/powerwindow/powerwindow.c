@@ -45,7 +45,7 @@ void powerwindow_Booleaninputarray_initialize( powerwindow_boolean_T *,
 void powerwindow_Uint8inputarray_initialize( powerwindow_uint8_T *,
     powerwindow_uint8_T * );
 void powerwindow_init();
-void powerwindow_main();
+void powerwindow_main()  __attribute__((noinline));
 int powerwindow_return();
 int main( void );
 
