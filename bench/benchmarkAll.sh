@@ -3,7 +3,7 @@
 BASEDIR=$(dirname "$0")
 WHITELIST=$1
 
-ALL_BENCHMARKS=$(find . -mindepth 2 -maxdepth 2 -type d)
+ALL_BENCHMARKS=$(find . -mindepth 2 -maxdepth 2 -type d | sort)
 
 CHOSEN_BENCHES=""
 
@@ -20,7 +20,6 @@ do
 		"filterbank" `#pasim saturate (CET)` \
 		"fir2dim" `#Runtime error (Traditional)` \
 		"isqrt" `#Runtime error (Traditional)` \
-		"lms" `#missing loop bounds` \
 		"ludcmp" `# Runtime error (Traditional)` \
 		"md5" `#Compile error (Singlepath, "Loop has no bound. Loop bound expected in the following MBB but was not found: 'while.cond'!")` \
 		"minver" `#Runtime Failure (CET-OPC)` \
