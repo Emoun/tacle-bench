@@ -46,7 +46,7 @@ if [ -f "$ID/a.out" ]; then
 			fi		
 		elif [ "$POSTPROCESS" == "2" ]; then
 			# Use platin to get WCET
-			timeout --kill-after=5s 300 platin wcet -i "$ID/a.pml" -b "$ID/a.out" -e $ENTRYFN --report > "$ID/wcet.txt" 2>&1
+			timeout --kill-after=5s 300 platin wcet -i "$ID/a.pml" -b "$ID/a.out" -e $ENTRYFN --target-call-return-costs --report > "$ID/wcet.txt" 2>&1
 			RETURNVALUE=$(echo $?)
 			if [ $RETURNVALUE -eq 0 ]; then
 				echo "Extracted WCET" > "$ID/success.txt"

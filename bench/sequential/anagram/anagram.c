@@ -212,7 +212,7 @@ typedef anagram_Letter *anagram_PLetter;
 */
 
 void anagram_init( void );
-void anagram_main( void );
+void anagram_main( void ) __attribute__((noinline));
 int anagram_return( void );
 int anagram_ch2i( int ch );
 void anagram_AddWords( void );

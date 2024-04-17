@@ -41,7 +41,7 @@ int ammunition_bits_test();
 int ammunition_arithm_test();
 void ammunition_init( void );
 int ammunition_return( void );
-void ammunition_main( void );
+void ammunition_main( void ) __attribute__((noinline));
 int main( void );
 
 

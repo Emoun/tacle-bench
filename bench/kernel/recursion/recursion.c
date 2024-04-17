@@ -29,7 +29,7 @@ int recursion_input;
   Forward declaration of functions
 */
 int recursion_fib( int i );
-void recursion_main( void );
+void recursion_main( void ) __attribute__((noinline));
 void recursion_init( void );
 int recursion_return( void );
 int main ( void );

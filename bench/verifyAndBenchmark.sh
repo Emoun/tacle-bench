@@ -28,6 +28,7 @@ CONFIG_NAMES=(
 	"CET Single-Issue No Pseudo (OPC)"
 	"CET Old"
 	"SP Old"
+	"Traditional No Data Cache"
 )
 CONFIG_IDS=(
 	"trad" 
@@ -51,6 +52,7 @@ CONFIG_IDS=(
 	"cet-si-noop-opc"
 	"sp-old"
 	"cet-old"
+	"trad-no-dc"
 )
 CONFIG_PREFIXES=(
 	"Trad" 
@@ -74,6 +76,7 @@ CONFIG_PREFIXES=(
 	"CETSINOOPOPC"
 	"SPOLD"
 	"CETOLD"
+	"TradNDC"
 )
 
 WORKING_DIR=$(pwd)
@@ -95,6 +98,9 @@ run_bench(){
 		POSTPROCESSING=""
 		if [[ "$POSTFIX" != *"-si"* ]]; then
 			FULL_OPTIONS="-mllvm --mpatmos-disable-vliw=false"
+		fi
+		if [[ "$POSTFIX" == *"-no-dc"* ]]; then
+			PASIM_OPTIONS="$PASIM_OPTIONS -D no"
 		fi
 		if [[ "$POSTFIX" == *"-noop"* ]]; then
 			FULL_OPTIONS="-mllvm --mpatmos-disable-pseudo-roots"
