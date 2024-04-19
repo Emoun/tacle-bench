@@ -25,7 +25,6 @@ do
 		"huff_enc" `#Recursive call` \
 		"rijndael_dec" `#Invalid loop bounds` \
 		"rijndael_enc" `#Invalid loop bounds` \
-		"fir2dim" `#Invalid return value (1)` \
 		"isqrt" `#Runtime Failure (Trad)` \
 		"ludcmp" `#Runtime Failure (Trad)` \
 		"pm" `#Platin Failure (Trad)`
