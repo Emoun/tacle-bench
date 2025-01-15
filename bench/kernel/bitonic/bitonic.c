@@ -130,7 +130,7 @@ void bitonic_sort( int lo, int cnt, int dir )
 /*
   Main functions
 */
-
+void bitonic_main( void ) __attribute__((noinline));
 void _Pragma ( "entrypoint" ) bitonic_main( void )
 {
   int i;

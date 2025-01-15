@@ -154,7 +154,7 @@ float lms_calc( float x,
   return y;
 }
 
-
+void lms_main( void ) __attribute__((noinline));
 void _Pragma( "entrypoint" ) lms_main( void )
 {
   int i;

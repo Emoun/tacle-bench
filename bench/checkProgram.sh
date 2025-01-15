@@ -25,7 +25,9 @@ rm -rf "$ID"
 
 mkdir "$ID"
 
-timeout --kill-after=5s 300 $COMPILER -O2 $COMPILE_OPTS *.c -o "$ID/a.out" -mllvm --stats -mllvm --info-output-file="$ID/stats.txt" > "$ID/compiler.txt" 2>&1
+TIMEOUT_OPTS="--kill-after=5s 600"
+
+timeout $TIMEOUT_OPTS $COMPILER -O2 $COMPILE_OPTS *.c -o "$ID/a.out" -mllvm --stats -mllvm --info-output-file="$ID/stats.txt" > "$ID/compiler.txt" 2>&1
 
 if [ -f "$ID/a.out" ]; then
 	patmos-llvm-objdump -d "$ID/a.out" > "$ID/a.asm"
@@ -46,7 +48,7 @@ if [ -f "$ID/a.out" ]; then
 			fi		
 		elif [ "$POSTPROCESS" == "2" ]; then
 			# Use platin to get WCET
-			timeout --kill-after=5s 300 platin wcet -i "$ID/a.pml" -b "$ID/a.out" -e $ENTRYFN --report > "$ID/wcet.txt" 2>&1
+			timeout $TIMEOUT_OPTS platin wcet -i "$ID/a.pml" -b "$ID/a.out" -e $ENTRYFN --target-call-return-costs --report > "$ID/wcet.txt" 2>&1
 			RETURNVALUE=$(echo $?)
 			if [ $RETURNVALUE -eq 0 ]; then
 				echo "Extracted WCET" > "$ID/success.txt"

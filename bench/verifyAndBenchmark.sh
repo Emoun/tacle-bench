@@ -9,71 +9,26 @@ WAIT_ON_PID=$$
 CONFIG_NAMES=(
 	"Traditional" 
 	"Traditional Single-Issue"
-	"Single-Path"
-	"Single-Path No Pseudo"
-	"CET"
-	"CET Single-Issue"
-	"CET No Pseudo"
-	"CET (OPC)"
-	"CET (DCC)"
-	"CET Permissive Dual-Issue"
-	"CET No Equivalence Class Scheduling"
-	"CET Single-Issue No Equivalence Class Scheduling"
-	"CET Compensation function 1"
-	"CET Compensation function 2"
-	"CET Compensation function 8"
-	"Single-Path Old Single-Issue No Pseudo"
-	"Single-Path Single-Issue No Pseudo"
-	"CET Old Single-Issue No Pseudo (OPC)"
-	"CET Single-Issue No Pseudo (OPC)"
-	"CET Old"
-	"SP Old"
+	"Local Value Optimization"
+	"Local Value Optimization Single-Issue"
+	"Array Optimization"
+	"Array Optimization Single-Issue"
 )
 CONFIG_IDS=(
 	"trad" 
 	"trad-si"
-	"sp"
-	"sp-noop"
-	"cet"
-	"cet-si"
-	"cet-noop"
-	"cet-opc"
-	"cet-dcc"
-	"cet-pdi"
-	"cet-necs"
-	"cet-si-necs"
-	"cet-comp1"
-	"cet-comp2"
-	"cet-comp8"
-	"sp-old-si-noop"
-	"sp-si-noop"
-	"cet-old-si-noop-opc"
-	"cet-si-noop-opc"
-	"sp-old"
-	"cet-old"
+	"loc"
+	"loc-si"
+	"loc-array"
+	"loc-array-si"
 )
 CONFIG_PREFIXES=(
 	"Trad" 
 	"TradSI"
-	"SP"
-	"SPNOOP"
-	"CET"
-	"CETSI"
-	"CETNOOP"
-	"CETOPC"
-	"CETDCC"
-	"CETPDI"
-	"CETNECS"
-	"CETSINECS"
-	"CETCOMPONE"
-	"CETCOMPTWO"
-	"CETCOMPEIG"
-	"SPOLDSINOOP"
-	"SPSINOOP"
-	"CETOLDSINOOPOPC"
-	"CETSINOOPOPC"
-	"SPOLD"
-	"CETOLD"
+	"Loc"
+	"LocSI"
+	"LocArray"
+	"LocArraySI"
 )
 
 WORKING_DIR=$(pwd)
@@ -90,53 +45,17 @@ run_bench(){
 
 	for i in $(seq 1 $REPEAT); do
 		
-		FULL_OPTIONS=""
+		FULL_OPTIONS="-mllvm --mpatmos-serialize=$POSTFIX-$i/a.pml"
 		PASIM_OPTIONS=""
-		POSTPROCESSING=""
+		POSTPROCESSING="2"
 		if [[ "$POSTFIX" != *"-si"* ]]; then
-			FULL_OPTIONS="-mllvm --mpatmos-disable-vliw=false"
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-disable-vliw=false"
 		fi
-		if [[ "$POSTFIX" == *"-noop"* ]]; then
-			FULL_OPTIONS="-mllvm --mpatmos-disable-pseudo-roots"
+		if [[ "$POSTFIX" == *"loc"* ]]; then
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-stack-cache-promotion"
 		fi
-		if [[ "$POSTFIX" == *"sp"* || "$POSTFIX" == *"cet"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-singlepath=$ENTRYFN"
-		fi
-		if [[ "$POSTFIX" == *"-pdi"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-permissive-dual-issue"
-			PASIM_OPTIONS="$PASIM_OPTIONS --permissive-dual-issue"
-		fi
-		if [[ "$POSTFIX" == *"-necs"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-disable-singlepath-scheduler-equivalence-class"
-		fi
-		if [[ "$POSTFIX" == *"-comp"* ]]; then
-			COMP_FN=""
-			if [[ "$POSTFIX" == *"-comp1"* ]]; then
-				COMP_FN="__patmos_main_mem_access_compensation1_di"
-			fi
-			if [[ "$POSTFIX" == *"-comp2"* ]]; then
-				COMP_FN="__patmos_main_mem_access_compensation2_di"
-			fi
-			if [[ "$POSTFIX" == *"-comp8"* ]]; then
-				COMP_FN="__patmos_main_mem_access_compensation8_di"
-			fi
-			
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-cet-compensation-function=$COMP_FN"
-		fi
-		if [[ "$POSTFIX" == *"-old"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-old-singlepath "
-		fi
-		if [[ "$POSTFIX" == *"cet"* ]]; then
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-cet"
-			if [[ "$POSTFIX" == *"-opc"* ]]; then
-				FULL_OPTIONS="$FULL_OPTIONS=opposite"
-			elif [[ "$POSTFIX" == *"-dcc"* ]]; then
-				FULL_OPTIONS="$FULL_OPTIONS=counter"
-			fi
-			POSTPROCESSING="1"
-		else
-			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-serialize=$POSTFIX-$i/a.pml"
-			POSTPROCESSING="2"
+		if [[ "$POSTFIX" == *"array"* ]]; then
+			FULL_OPTIONS="$FULL_OPTIONS -mllvm --mpatmos-enable-array-stack-cache-promotion"
 		fi
 		
 		# Wait if too many jobs are running

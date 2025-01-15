@@ -39,7 +39,7 @@ void quicksort_init( void );
 int quicksort_return( void );
 void quicksort_str( char *, unsigned long, unsigned long );
 void quicksort_vec( char *, unsigned long, unsigned long );
-void quicksort_main( void );
+void quicksort_main( void )  __attribute__((noinline));
 int main( void );
 
 

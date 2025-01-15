@@ -17,33 +17,20 @@ do
 		"bitcount" `#Recursive call` \
 		"bitonic" `#Recursive call` \
 		"fac" `#Recursive call` \
-		"filterbank" `#pasim saturate (CET)` \
-		"fir2dim" `#Runtime error (Traditional)` \
+		"fir2dim" `#Runtime error (GCC)` \
+		"isqrt" `#Runtime error (Unknown)` \
 		"isqrt" `#Runtime error (Traditional)` \
-		"ludcmp" `# Runtime error (Traditional)` \
-		"md5" `#Compile error (Singlepath, "Loop has no bound. Loop bound expected in the following MBB but was not found: 'while.cond'!")` \
-		"minver" `#Runtime Failure (CET-OPC)` \
-		"pm" `#pasim saturate (CET)` \
-		"prime" `#Compile error (Singlepath, "Loop has no bound. Loop bound expected in the following MBB but was not found: 'for.cond'!")` \
-		"quicksort" `#Recursive call` \
-		"recursion" `#Recursive call` \
-		"sha" `##Compile Failure (CET)` \
 		"parallel" `#Unsupported build` \
+ 		"rijndael_dec" `#Invalid loop bounds` \
+		"rijndael_enc" `#Invalid loop bounds`\
 		"ammunition" `#Recursive call` \
 		"anagram" `#Recursive call` \
-		"audiobeam" `#Runtime Failure (CET)` \
-		"dijkstra" `#Timeout (CET)` \
-		"epic" `#Timeout (CET)` \
-		"g723_enc" `#Runtime Failure (CET)` \
-		"gsm_dec" `#Compile Failure (CET)` \
-		"gsm_enc" `#Compile Failure (CET, LLVM ERROR: llvm.memset length argument not a constant value)` \
-		"huff_dec" `#Runtime Failure (CET)` \
-		"huff_enc" `#Recursive call` \
-		"mpeg2" `#Compile Failure (CET, IndexedMap.h:51... && index out of bounds!)` \
-		"petrinet" `# Compile Failure (CET, manual oom)` \
-		"rijndael_dec" `#Invalid loop bounds` \
-		"rijndael_enc" `#Invalid loop bounds` \
-		"susan" `#Compile Failure (CET)` 		
+		"ammunition" `#Recursive call` \
+		"anagram" `#Recursive call` \
+		"quicksort" `#Recursive call` \
+		"recursion" `#Recursive call` \
+		"ludcmp" `#Runtime Failure (Traditional)` \
+		"huff_enc" `#Failed to get WCET(Traditional)`
 	do
 		if [[ "$BENCH" == *"$IGN"* ]]; then
 			DO_IGNORE=1
@@ -85,4 +72,5 @@ RESULT_FILE="$BASEDIR/results.txt"
 
 rm -f "$RESULT_FILE"
 
-$BASEDIR/verifyAndBenchmark.sh "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20" "$CHOSEN_BENCHES" "$RESULT_FILE"
+#$BASEDIR/verifyAndBenchmark.sh "0 1 2 3 4 5" "$CHOSEN_BENCHES" "$RESULT_FILE"
+$BASEDIR/verifyAndBenchmark.sh "0 2 4" "$CHOSEN_BENCHES" "$RESULT_FILE"

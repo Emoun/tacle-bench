@@ -84,7 +84,7 @@ void huff_enc_encode_codes_table( huff_enc_t_tree *tree,
                                   huff_enc_t_bin_val codes_table[ 257 ], huff_enc_t_bin_val *code_val );
 void huff_enc_create_codes_table( huff_enc_t_tree *tree,
                                   huff_enc_t_bin_val codes_table[ 257 ] );
-void huff_enc_main();
+void huff_enc_main() __attribute__((noinline));
 int main( void );
 
 

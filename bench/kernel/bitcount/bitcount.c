@@ -37,7 +37,7 @@ unsigned int bitcount_iterations;
 */
 int bitcount_bit_shifter( long int x );
 unsigned long bitcount_random( void );
-void bitcount_main();
+void bitcount_main() __attribute__((noinline));
 int bitcount_return();
 void bitcount_init();
 int main( void );
